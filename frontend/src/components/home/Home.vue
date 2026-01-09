@@ -134,5 +134,5 @@
 </template>
 
 <script setup>
-import './Home.css';
+import './home.css';
 </script>

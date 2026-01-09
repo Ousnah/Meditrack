@@ -6,7 +6,7 @@
         @keydown.space.enter.prevent="stepDisplay = !stepDisplay"
         :aria-expanded="stepDisplay"
         role="button"
-        :aria-label="`Bloc {{ title }}, {{ description }}. Etat : {{ state }}. . Cliquer pour {{ stepDisplay ? 'réduire' : 'étendre' }}.`"
+        :aria-label="`Bloc ${ title }, ${ description }. Etat : ${ state }. Cliquer pour ${ stepDisplay ? 'réduire' : 'étendre' }.`"
         tabindex="0">
         <div class="card-icon">
             <div class="icon-circle" :class="state"></div>
