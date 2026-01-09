@@ -1,7 +1,15 @@
 <template>
-    <div class="card" :class="state" @click="stepDisplay = !stepDisplay">
+    <div 
+        class="card" 
+        :class="state" 
+        @click="stepDisplay = !stepDisplay"
+        @keydown.space.enter.prevent="stepDisplay = !stepDisplay"
+        :aria-expanded="stepDisplay"
+        role="button"
+        :aria-label="`Bloc {{ title }}, {{ description }}. Etat : {{ state }}. . Cliquer pour {{ stepDisplay ? 'réduire' : 'étendre' }}.`"
+        tabindex="0">
         <div class="card-icon">
-            <img :src="icon" :alt="`${title} icon`" />
+            <div class="icon-circle" :class="state"></div>
         </div>
         <div class="card-content">
             <div class="card-title-container">
@@ -18,6 +26,9 @@
                 </svg>
                 {{ date }}
             </p>
+            <div class="card-step-count" v-if="steps.length">
+                {{ steps.filter(step => step.done).length }} / {{ steps.length }} étapes complétées
+            </div>
             <div class="card-steps" v-if="stepDisplay">
                 <Steps 
                     v-for="(step, index) in steps" 
@@ -44,10 +55,6 @@
             default: 'next',
             validator: (value) => ['done', 'current', 'next'].includes(value)
         },
-        icon: {
-            type: String,
-            required: true
-        },
         title: {
             type: String,
             required: true
@@ -69,3 +76,4 @@
 </script>
 
 <style src="./cards.css" scoped></style>
+<style scoped></style>
