@@ -1,12 +1,13 @@
 <script setup>
+  import { ref } from 'vue';
   import Steps from './components/steps/Steps.vue';
+
+  const step1Done = ref(true);
 </script>
 
 <template>
   <div id="app">
-    <Steps :done="true" label="Step 1: Completed"></Steps>
-    <Steps :done="false" label="Step 2: In Progress"></Steps>
-    <Steps :done="false" label="Step 3: Pending"></Steps>
+    <Steps :done="step1Done" label="Step 1: Completed" @toggle="() => step1Done = !step1Done"></Steps>
   </div>
 </template>
 
