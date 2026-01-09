@@ -2,7 +2,7 @@
   import { ref } from 'vue';
   import TabBar from './components/TabBar.vue';
   import Home from './components/home/Home.vue';
-  import Steps from './components/steps/Steps.vue';
+  import Etapes from './components/etapes/Etapes.vue';
 
   const activeTab = ref('home');
 
@@ -27,7 +27,11 @@
 
     <!-- Steps Tab -->
     <section v-if="activeTab === 'steps'">
-      <Steps />
+      <div class="container">
+        <h1>Étapes</h1>
+        <p>Vos étapes seront affichées ici</p>
+      </div>
+      <Etapes />
     </section>
 
     <!-- Appointments Tab -->
