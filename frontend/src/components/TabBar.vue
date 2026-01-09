@@ -1,164 +1,153 @@
 <template>
-  <div class="tab-bar">
+  <nav class="tab-bar" role="tablist" aria-label="Navigation principale">
     <button
       v-for="tab in tabs"
       :key="tab.id"
-      class="tab-button"
-      :class="{ active: activeTab === tab.id }"
+      :class="['tab-button', { active: activeTab === tab.id }]"
+      :aria-selected="activeTab === tab.id"
+      :aria-controls="`${tab.id}-panel`"
+      :role="'tab'"
+      :tabindex="activeTab === tab.id ? 0 : -1"
       @click="selectTab(tab.id)"
+      @keydown="handleKeydown"
     >
+      <!-- Home Icon -->
       <svg
         v-if="tab.icon === 'home'"
-        class="icon"
+        :class="['tab-icon', { 'icon-active': activeTab === tab.id }]"
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+        focusable="false"
       >
-        <path
-          d="M3 12l9-9 9 9M5 10v10c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2v-10"
-          stroke-width="2"
-          stroke-linecap="round"
-        />
+        <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+        <polyline points="9 22 9 12 15 12 15 22" />
       </svg>
 
+      <!-- Steps Icon -->
       <svg
-        v-else-if="tab.icon === 'steps'"
-        class="icon"
+        v-if="tab.icon === 'steps'"
+        :class="['tab-icon', { 'icon-active': activeTab === tab.id }]"
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+        focusable="false"
       >
-        <path
-          d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v7"
-          stroke-width="2"
-          stroke-linecap="round"
-        />
+        <rect x="3" y="3" width="7" height="7" />
+        <rect x="14" y="3" width="7" height="7" />
+        <rect x="14" y="14" width="7" height="7" />
+        <rect x="3" y="14" width="7" height="7" />
       </svg>
 
+      <!-- Calendar Icon -->
       <svg
-        v-else-if="tab.icon === 'calendar'"
-        class="icon"
+        v-if="tab.icon === 'calendar'"
+        :class="['tab-icon', { 'icon-active': activeTab === tab.id }]"
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+        focusable="false"
       >
-        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke-width="2" />
-        <path d="M16 2v4M8 2v4M3 10h18" stroke-width="2" stroke-linecap="round" />
+        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+        <path d="M16 2v4M8 2v4M3 10h18" />
       </svg>
 
+      <!-- Documents Icon -->
       <svg
-        v-else-if="tab.icon === 'documents'"
-        class="icon"
+        v-if="tab.icon === 'documents'"
+        :class="['tab-icon', { 'icon-active': activeTab === tab.id }]"
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+        focusable="false"
       >
-        <path
-          d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"
-          stroke-width="2"
-          stroke-linecap="round"
-        />
-        <polyline points="13 2 13 9 20 9" stroke-width="2" stroke-linecap="round" />
+        <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" />
+        <polyline points="13 2 13 9 20 9" />
+        <line x1="9" y1="15" x2="15" y2="15" />
+        <line x1="9" y1="19" x2="15" y2="19" />
       </svg>
 
-      <span class="label">{{ tab.label }}</span>
+      <span class="tab-label">{{ tab.label }}</span>
     </button>
-  </div>
+  </nav>
 </template>
 
 <script setup>
-import { defineProps, defineEmits, ref } from 'vue';
+import { ref } from 'vue'
+import './TabBar.css'
 
 const props = defineProps({
   tabs: {
     type: Array,
     required: true,
+    default: () => []
   },
   defaultTab: {
     type: String,
-    default: 'home',
-  },
-});
+    default: 'home'
+  }
+})
 
-const emit = defineEmits(['tab-change']);
+const emit = defineEmits(['tab-change'])
 
-const activeTab = ref(props.defaultTab);
+const activeTab = ref(props.defaultTab)
 
 const selectTab = (tabId) => {
-  activeTab.value = tabId;
-  emit('tab-change', tabId);
-};
+  activeTab.value = tabId
+  emit('tab-change', tabId)
+}
+
+const handleKeydown = (event) => {
+  const tabIds = props.tabs.map(tab => tab.id)
+  const currentIndex = tabIds.indexOf(activeTab.value)
+  
+  let nextIndex
+  
+  if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+    event.preventDefault()
+    nextIndex = currentIndex === 0 ? tabIds.length - 1 : currentIndex - 1
+  } else if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+    event.preventDefault()
+    nextIndex = currentIndex === tabIds.length - 1 ? 0 : currentIndex + 1
+  } else if (event.key === 'Home') {
+    event.preventDefault()
+    nextIndex = 0
+  } else if (event.key === 'End') {
+    event.preventDefault()
+    nextIndex = tabIds.length - 1
+  } else {
+    return
+  }
+  
+  selectTab(tabIds[nextIndex])
+}
 </script>
-
-<style scoped>
-.tab-bar {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 56px;
-  background: white;
-  border-top: 1px solid #e5e7eb;
-  display: flex;
-  justify-content: space-around;
-  z-index: 50;
-}
-
-.tab-button {
-  flex: 1 1 25%;
-  background: none;
-  border: none;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  cursor: pointer;
-  color: #6b7280;
-  transition: all 0.2s;
-  font-size: 10px;
-  padding: 0;
-}
-
-.tab-button.active {
-  background: rgba(59, 130, 246, 0.08);
-  color: #3b82f6;
-}
-
-.tab-button:active {
-  background: rgba(59, 130, 246, 0.12);
-}
-
-.icon {
-  width: 24px;
-  height: 24px;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.label {
-  font-weight: 500;
-  font-size: 10px;
-}
-
-@media (min-width: 768px) {
-  .tab-bar {
-    height: 64px;
-  }
-
-  .tab-button {
-    gap: 6px;
-    font-size: 11px;
-  }
-
-  .icon {
-    width: 28px;
-    height: 28px;
-  }
-
-  .label {
-    font-size: 11px;
-  }
-}
-</style>
 
