@@ -1,0 +1,77 @@
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-error.log*
+pnpm-lock.yaml
+package-lock.json
+dist/
+build/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+.env.*.local
+venv/
+.venv/
+env/
+pip-wheel-metadata/
+pip-log.txt
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.pytest_cache/
+*.egg-info/
+dist/
+build/
+
+# Logs
+logs/
+*.log
+
+# Databases
+*.sqlite3
+*.db
+
+# IDEs and editors
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.user
+
+# Docker
+docker-compose.override.yml
+
+# Temporary files
+*.tmp
+*.swp
+*.lock
+*.bak
+
+# Compiled / binary files
+*.o
+*.so
+*.dll
+*.exe
+*.class
+
+# Coverage reports
+coverage/
+coverage.xml
+
+# Misc
+coverage/
+*.local

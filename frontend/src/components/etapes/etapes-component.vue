@@ -44,7 +44,7 @@
 <script setup>
 import { ref } from 'vue';
 import './etapes.css';
-import Cards from './cards/Cards.vue';
+import Cards from './cards/cards-component.vue';
 
 const card1Steps = ref([
     { label: 'Consultation chirurgien', done: true },

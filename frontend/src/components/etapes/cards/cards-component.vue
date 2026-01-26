@@ -44,7 +44,7 @@
 
 <script setup>
     import { ref } from 'vue';
-    import Steps from '../steps/Steps.vue';
+    import Steps from '../steps/steps-component.vue';
 
     const stepDisplay = ref(false);
 
