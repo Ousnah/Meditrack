@@ -1,7 +1,7 @@
 <template>
     <div 
         class="card" 
-        :class="state" 
+        :class="cardClass" 
         @click="stepDisplay = !stepDisplay"
         @keydown.space.enter.prevent="stepDisplay = !stepDisplay"
         :aria-expanded="stepDisplay"
@@ -9,7 +9,7 @@
         :aria-label="`Bloc ${ title }, ${ description }. Etat : ${ state }. Cliquer pour ${ stepDisplay ? 'réduire' : 'étendre' }.`"
         tabindex="0">
         <div class="card-icon">
-            <div class="icon-circle" :class="state"></div>
+            <div class="icon-circle" :class="cardClass"></div>
         </div>
         <div class="card-content">
             <div class="card-title-container">
@@ -43,12 +43,12 @@
 </template>
 
 <script setup>
-    import { ref } from 'vue';
+    import { ref, computed, toRefs } from 'vue';
     import Steps from '../steps/steps-component.vue';
 
     const stepDisplay = ref(false);
 
-    defineProps({
+    const props = defineProps({
         state: {
             type: String,
             required: false,
@@ -72,6 +72,14 @@
             required: true,
             default: () => []
         }
+    });
+
+    const { state, steps } = toRefs(props);
+
+    const cardClass = computed(() => {
+        const s = steps.value || [];
+        if (s.length && s.every(step => step.done)) return 'done';
+        return state.value || 'next';
     });
 </script>
 
