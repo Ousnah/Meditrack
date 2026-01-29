@@ -2,7 +2,7 @@
     <div 
         tabindex="0" 
         class="step" 
-        :aria-label="`étape : ${label}, état : ${done ? 'fait' : 'pas fait'}`"
+        :aria-label="`étape : ${label}, état : ${done ? 'terminé' : 'à faire'}`"
         @keydown.space.prevent.stop="$emit('toggle')"
         @keydown.enter.prevent.stop="$emit('toggle')"
         @click.stop="$emit('toggle')"
@@ -16,7 +16,7 @@
             @change="$emit('toggle')"
             @keydown.stop
             :aria-checked="done ? 'true' : 'false'"
-            :aria-label="`étape : ${label}, état : ${done ? 'fait' : 'pas fait'}`"
+            :aria-label="`étape : ${label}, état : ${done ? 'terminé' : 'à faire'}`"
             />
             <span class="step-label" :class="{ 'step-label--done': done }" aria-hidden="true">
             {{ label }}

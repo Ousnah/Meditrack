@@ -1,10 +1,10 @@
 <template>
     <Header />
-    <div class="etapes-container">
-        <section class="etapes-header" aria-label="En-tête étapes">
-            <h2>Étapes</h2>
+    <div class="etapes-container" role="main" aria-label="Conteneur des étapes">
+        <section class="etapes-header" aria-labelledby="etapes-title">
+            <h2 id="etapes-title" tabindex="0">Étapes</h2>
         </section>
-        <div class="etapes-cards">
+        <div class="etapes-cards" role="list" aria-label="Liste des étapes de suivi">
             <Cards
                 icon="medical-consultation"
                 title="Consultation pré-opératoire"

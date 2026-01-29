@@ -23,25 +23,25 @@
 </script>
 
 <template>
-  <div id="app">
+  <div id="app" role="application" aria-label="Application Meditrack">
     <!-- Home Tab -->
-    <section v-if="activeTab === 'home'">
+    <section v-if="activeTab === 'home'" aria-label="Page d'accueil">
       <Home />
     </section>
 
     <!-- Steps Tab -->
-    <section v-if="activeTab === 'steps'">
+    <section v-if="activeTab === 'steps'" aria-label="Page des étapes">
       <Etapes />
     </section>
 
     <!-- Appointments Tab -->
-    <section v-if="activeTab === 'appointments'" class="tab-content">
+    <section v-if="activeTab === 'appointments'" class="tab-content" aria-label="Page des rendez-vous">
       
       <rdvComponent />
     </section>
 
     <!-- Documents Tab -->
-    <section v-if="activeTab === 'documents'" class="tab-content">
+    <section v-if="activeTab === 'documents'" class="tab-content" aria-label="Page des documents">
       <docComponent />
     </section>
 

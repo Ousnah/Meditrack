@@ -7,7 +7,7 @@
 
     <div class="container">
       <section class="documents-header" aria-label="En-tête documents">
-        <h2>Documents médicaux</h2>
+        <h2 tabindex="0">Documents médicaux</h2>
         <div class="header-info">
           <span class="doc-count">{{ documents.length }} documents</span>
           <button
@@ -38,6 +38,7 @@
           :key="category.id"
           :class="['filter-btn', { active: activeCategory === category.id }]"
           :role="'tab'"
+          :aria-label="`Filtrer par ${category.label}`"
           :aria-selected="activeCategory === category.id"
           @click="activeCategory = category.id"
         >
@@ -60,7 +61,7 @@
             <div class="doc-icon" aria-hidden="true">📋</div>
             
             <div class="doc-content">
-              <h3 class="doc-title">{{ doc.title }}</h3>
+              <h3 class="doc-title" tabindex="0">{{ doc.title }}</h3>
               <span class="doc-category" :class="`category-${doc.category.toLowerCase()}`">
                 {{ doc.category }}
               </span>
@@ -73,7 +74,7 @@
           </div>
 
           <div class="doc-actions">
-            <button class="action-btn view-btn" aria-label="Voir le document" title="Voir" @click="openDoc(doc)">
+            <button class="action-btn view-btn" :aria-label="`Voir le document ${doc.title}`" title="Voir" @click="openDoc(doc)">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
                 <circle cx="12" cy="12" r="3" />
@@ -82,7 +83,7 @@
             </button>
             <button
               class="action-btn download-btn"
-              aria-label="Télécharger le document"
+              :aria-label="`Télécharger le document ${doc.title}`"
               title="Télécharger"
               @click="downloadDoc(doc)"
             >
@@ -107,7 +108,7 @@
       <div style="background:#fff;border-radius:14px;max-width:560px;width:100%;padding:20px;max-height:90vh;overflow-y:auto;box-shadow:0 10px 25px rgba(0,0,0,0.2);">
         <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;">
           <div>
-            <h3 style="margin:0;font-size:16px;">Ajouter un document</h3>
+            <h3 style="margin:0;font-size:16px;" tabindex="0">Ajouter un document</h3>
             <p style="margin:4px 0 0;color:#6b7280;font-size:12px;">
               {{ selectedFile?.name }} • {{ selectedFileHumanSize }}
             </p>
@@ -116,6 +117,7 @@
             class="action-btn"
             style="flex:0 0 auto;background:#f3f4f6;color:#111827;"
             type="button"
+            aria-label="Fermer la fenêtre d'ajout de document"
             @click="closeUploadModal"
             :disabled="uploading"
           >
@@ -123,13 +125,14 @@
           </button>
         </div>
 
-        <form style="margin-top:12px;display:flex;flex-direction:column;gap:10px;" @submit.prevent="submitUpload">
+        <form aria-label="Formulaire d'ajout de document" style="margin-top:12px;display:flex;flex-direction:column;gap:10px;" @submit.prevent="submitUpload">
           <label style="display:flex;flex-direction:column;gap:6px;font-size:12px;color:#374151;">
             Titre
             <input
               v-model.trim="uploadForm.title"
               required
               type="text"
+              aria-label="Titre du document"
               placeholder="Ex: Compte rendu opératoire"
               style="border:1px solid #e5e7eb;border-radius:10px;padding:10px;font-size:14px;"
               :disabled="uploading"
@@ -141,6 +144,7 @@
             <select
               v-model="uploadForm.type"
               required
+              aria-label="Catégorie du document"
               style="border:1px solid #e5e7eb;border-radius:10px;padding:10px;font-size:14px;background:#fff;"
               :disabled="uploading"
             >

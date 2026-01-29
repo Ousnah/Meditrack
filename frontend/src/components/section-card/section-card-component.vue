@@ -1,7 +1,7 @@
 <template>
-	<section class="container-section">
+	<section class="container-section" role="region" :aria-labelledby="title ? 'section-card-title' : undefined">
 		<div class="container">
-			<h1>{{ title }}</h1>
+			<h1 v-if="title" id="section-card-title" tabindex="0">{{ title }}</h1>
 			<p v-if="subtitle">{{ subtitle }}</p>
 			<slot />
 		</div>

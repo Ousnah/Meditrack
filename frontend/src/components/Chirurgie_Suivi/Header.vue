@@ -1,5 +1,5 @@
 <template>
-  <header class="header">
+  <header class="header" role="banner">
     <h1 class="header-title">Chirurgie Suivi</h1>
     <p class="header-subtitle">Votre parcours chirurgical étape par étape</p>
   </header>

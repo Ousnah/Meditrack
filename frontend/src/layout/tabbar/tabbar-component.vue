@@ -4,6 +4,7 @@
       v-for="tab in tabs"
       :key="tab.id"
       :class="['tab-button', { active: activeTab === tab.id }]"
+      :aria-label="tab.label"
       :aria-selected="activeTab === tab.id"
       :aria-controls="`${tab.id}-panel`"
       role="tab"

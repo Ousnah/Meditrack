@@ -6,7 +6,7 @@
         @keydown.space.enter.prevent="stepDisplay = !stepDisplay"
         :aria-expanded="stepDisplay"
         role="button"
-        :aria-label="`Bloc ${ title }, ${ description }. Etat : ${ state }. Cliquer pour ${ stepDisplay ? 'réduire' : 'étendre' }.`"
+        :aria-label="`Bloc ${ title }. Etat : ${ state }. Cliquer pour ${ stepDisplay ? 'réduire' : 'étendre' }.`"
         tabindex="0">
         <div class="card-icon">
             <div class="icon-circle" :class="cardClass"></div>
@@ -14,19 +14,19 @@
         <div class="card-content">
             <div class="card-title-container">
                 <h2 class="card-title">{{ title }}</h2>
-                <svg class="arrow-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg class="arrow-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <polyline points="9 18 15 12 9 6"></polyline>
                 </svg>
             </div>
             <p class="card-description">{{ description }}</p>
             <p class="card-date">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: inline; margin-right: 4px; vertical-align: middle;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: inline; margin-right: 4px; vertical-align: middle;" aria-hidden="true">
                     <circle cx="12" cy="12" r="10"></circle>
                     <polyline points="12 6 12 12 16 14"></polyline>
                 </svg>
                 {{ date }}
             </p>
-            <div class="card-step-count" v-if="steps.length">
+            <div class="card-step-count" v-if="steps.length" aria-live="polite" aria-atomic="true">
                 {{ steps.filter(step => step.done).length }} / {{ steps.length }} étapes complétées
             </div>
             <div class="card-steps" v-if="stepDisplay">

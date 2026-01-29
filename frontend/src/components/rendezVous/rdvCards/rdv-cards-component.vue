@@ -17,11 +17,11 @@ const emit = defineEmits(['details']);
 </script>
 
 <template>
-  <div class="rdv-cards" v-if="!isPast">
+  <div class="rdv-cards" v-if="!isPast" role="article" :aria-label="`Rendez-vous avec Dr. ${prenom} ${nom}`">
     <div class="card-header">
-      <img :src="profilePicture" alt="Profile Picture" class="profile-picture" />
+      <img :src="profilePicture" :alt="`Photo de Dr. ${prenom} ${nom}`" class="profile-picture" />
       <div class="user-info">
-        <h2>Dr. {{ prenom }} {{ nom }}</h2>
+        <h2 tabindex="0">Dr. {{ prenom }} {{ nom }}</h2>
         <p>{{ profession }}</p>
         <p>{{ operation }}</p>
       </div>
@@ -29,15 +29,15 @@ const emit = defineEmits(['details']);
     <p>{{ date }}</p>
     <p>{{ heure }}</p>
     <p>{{ adresse }}</p>
-    <button class="details-button" type="button" @click="emit('details')">
+    <button class="details-button" type="button" aria-label="Voir les détails du rendez-vous" @click="emit('details')">
       Voir les détails
     </button>
   </div>
 
-  <div class="rdv-cards-past" v-if="isPast">
-    <img :src="profilePicture" alt="Profile Picture" class="profile-picture" />
+  <div class="rdv-cards-past" v-if="isPast" role="article" :aria-label="`Rendez-vous passé avec Dr. ${prenom} ${nom}`">
+    <img :src="profilePicture" :alt="`Photo de Dr. ${prenom} ${nom}`" class="profile-picture" />
     <div class="user-info-past">
-      <h2>Dr. {{ prenom }} {{ nom }}</h2>
+      <h2 tabindex="0">Dr. {{ prenom }} {{ nom }}</h2>
       <p>{{ profession }}</p>
       <p>{{ operation }}</p>
       <p>{{ date }} à {{ heure }}</p>

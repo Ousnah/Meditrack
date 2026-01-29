@@ -10,7 +10,7 @@
     <div class="container">
       <!-- Greeting -->
       <section class="greeting" aria-label="Accueil personnalisé">
-        <h2>Bonjour, Pierre 👋</h2>
+       <h2>Bonjour</h2>
         <p>Voici votre suivi du jour</p>
       </section>
 
@@ -22,22 +22,11 @@
       <!-- Next Appointment -->
       <section class="appointment-card" aria-label="Prochain rendez-vous">
         <header class="appointment-header">
-          <h2 class="appointment-label">Prochain rendez-vous</h2>
-          <button 
-            class="info-button" 
-            aria-label="Plus d'informations sur le rendez-vous"
-            title="Plus d'informations"
-          >
-            <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
-              <circle cx="12" cy="12" r="10" stroke-width="2"/>
-              <line x1="12" y1="16" x2="12" y2="12" stroke-width="2"/>
-              <line x1="12" y1="8" x2="12.01" y2="8" stroke-width="2"/>
-            </svg>
-          </button>
+          <h2 class="appointment-label" tabindex="0">Prochain rendez-vous</h2>
         </header>
         <article class="appointment-doctor">
-          <h3 v-if="nextRdv">Dr. {{ nextRdv.prenom }} {{ nextRdv.nom }}</h3>
-          <h3 v-else>Aucun rendez-vous</h3>
+          <h3 v-if="nextRdv" tabindex="0">Dr. {{ nextRdv.prenom }} {{ nextRdv.nom }}</h3>
+          <h3 v-else tabindex="0">Aucun rendez-vous</h3>
           <p class="specialty" v-if="nextRdv">{{ nextRdv.profession }}</p>
           <p class="description" v-if="nextRdv">{{ nextRdv.operation }}</p>
           <p class="description" v-else>Ajoute ton premier rendez-vous dans l’onglet “Rendez-vous”.</p>
@@ -62,7 +51,7 @@
       <!-- Tasks Section -->
       <section class="section" aria-label="Tâches du jour">
         <header class="section-header">
-          <h2>Tâches du jour</h2>
+          <h2 tabindex="0">Tâches du jour</h2>
           <span class="count" aria-label="3 tâches à accomplir">3 tâches</span>
         </header>
 
@@ -105,8 +94,7 @@
       <!-- Documents Section -->
       <section class="section" aria-label="Documents récents">
         <header class="section-header">
-          <h2>Documents récents</h2>
-          <a href="#" class="see-all" aria-label="Voir tous les documents">Voir tout ></a>
+          <h2 id="recent-docs-title" tabindex="0">Documents récents</h2>
         </header>
 
         <ul class="documents" role="list">

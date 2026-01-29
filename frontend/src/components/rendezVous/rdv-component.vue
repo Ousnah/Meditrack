@@ -85,8 +85,8 @@ const closeDetails = () => {
     {{ errorMessage }}
   </p>
 
-  <h2>A venir</h2>
-  <div class="rdv-component">
+  <h2 id="upcoming-title" tabindex="0" aria-label="Rendez vous à venir">A venir</h2>
+  <div class="rdv-component" role="region" aria-labelledby="upcoming-title">
     <p v-if="!loading && upcoming.length === 0" style="color:#6b7280;">Aucun rendez-vous à venir.</p>
     <RdvCardsComponent
       v-for="rdv in upcoming"
@@ -104,8 +104,8 @@ const closeDetails = () => {
     />
   </div>
 
-  <h2>Historique</h2>
-  <div class="rdv-component">
+  <h2 id="history-title" tabindex="0" aria-label="Historique des rendez-vous">Historique</h2>
+  <div class="rdv-component" role="region" aria-labelledby="history-title">
     <p v-if="!loading && past.length === 0" style="color:#6b7280;">Aucun rendez-vous passé.</p>
     <RdvCardsComponent
       v-for="rdv in past"
@@ -135,11 +135,12 @@ const closeDetails = () => {
       style="background:#ffffff;border-radius:16px;max-width:560px;width:100%;padding:20px;max-height:90vh;overflow-y:auto;box-shadow:0 10px 25px rgba(0,0,0,0.2);"
     >
       <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px;">
-        <h3 style="margin:0;font-size:18px;">
+        <h3 id="rdv-modal-title" style="margin:0;font-size:18px;" tabindex="0">
           Détails du rendez-vous
         </h3>
         <button
           type="button"
+          aria-label="Fermer le dialogue des détails"
           style="border:none;background:#e5e7eb;border-radius:999px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;"
           @click="closeDetails"
         >
@@ -150,7 +151,7 @@ const closeDetails = () => {
       <div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:12px;">
         <img
           :src="selectedRdv.profile_picture || 'https://randomuser.me/api/portraits/men/32.jpg'"
-          alt="Photo du médecin"
+          :alt="`Photo de Dr. ${selectedRdv.doctor_first_name} ${selectedRdv.doctor_last_name}`"
           style="width:56px;height:56px;border-radius:50%;object-fit:cover;"
         />
         <div>
