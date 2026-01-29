@@ -1,39 +1,185 @@
 <script setup>
+import { computed, onMounted, ref } from 'vue';
 import './rdv.css';
 import RdvCardsComponent from './rdvCards/rdv-cards-component.vue';
 import addRdvComponent from './addRdv/add-rdv-component.vue';
+import { supabase } from '../../lib/supabase';
+
+const rdvs = ref([]);
+const loading = ref(true);
+const errorMessage = ref(null);
+
+const loadRdvs = async () => {
+  loading.value = true;
+  errorMessage.value = null;
+
+  const { data, error } = await supabase
+    .from('rendezvous')
+    .select('*')
+    .order('starts_at', { ascending: true });
+
+  if (error) {
+    console.error(error);
+    errorMessage.value = "Impossible de charger les rendez-vous.";
+    loading.value = false;
+    return;
+  }
+
+  rdvs.value = data || [];
+  loading.value = false;
+};
+
+onMounted(() => {
+  loadRdvs();
+});
+
+const now = () => new Date();
+
+const upcoming = computed(() =>
+  rdvs.value.filter((r) => new Date(r.starts_at) >= now())
+);
+
+const past = computed(() =>
+  rdvs.value
+    .filter((r) => new Date(r.starts_at) < now())
+    .sort((a, b) => new Date(b.starts_at) - new Date(a.starts_at))
+);
+
+const formatDateFr = (iso) =>
+  new Date(iso).toLocaleDateString('fr-FR', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+  });
+
+const formatTime = (iso) =>
+  new Date(iso).toLocaleTimeString('fr-FR', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+
+const isDetailsOpen = ref(false);
+const selectedRdv = ref(null);
+const selectedIsPast = ref(false);
+
+const openDetails = (rdv, isPast) => {
+  selectedRdv.value = rdv;
+  selectedIsPast.value = isPast;
+  isDetailsOpen.value = true;
+};
+
+const closeDetails = () => {
+  isDetailsOpen.value = false;
+  selectedRdv.value = null;
+  selectedIsPast.value = false;
+};
 </script>
 
 <template>
-    <addRdvComponent />
-    <h2>A venir</h2>
-    <div class="rdv-component">
-        <RdvCardsComponent
-            profilePicture="https://randomuser.me/api/portraits/men/32.jpg"
-            nom="Dupont"
-            prenom="Jean"
-            profession="Cardiologue"
-            operation="Consultation de suivi"
-            date="12 Octobre 2024"
-            heure="14:30"
-            adresse="123 Rue de la Santé, Paris"
-            :isPast="false"
+  <addRdvComponent :upcomingCount="upcoming.length" @created="loadRdvs" />
+
+  <p v-if="loading" style="color:#6b7280;font-size:12px;margin:8px 0;">Chargement…</p>
+  <p v-else-if="errorMessage" style="color:#b91c1c;font-size:12px;margin:8px 0;">
+    {{ errorMessage }}
+  </p>
+
+  <h2>A venir</h2>
+  <div class="rdv-component">
+    <p v-if="!loading && upcoming.length === 0" style="color:#6b7280;">Aucun rendez-vous à venir.</p>
+    <RdvCardsComponent
+      v-for="rdv in upcoming"
+      :key="rdv.id_rendezvous"
+      :profilePicture="rdv.profile_picture || 'https://randomuser.me/api/portraits/men/32.jpg'"
+      :nom="rdv.doctor_last_name"
+      :prenom="rdv.doctor_first_name"
+      :profession="rdv.profession"
+      :operation="rdv.operation"
+      :date="formatDateFr(rdv.starts_at)"
+      :heure="formatTime(rdv.starts_at)"
+      :adresse="rdv.address"
+      :isPast="false"
+      @details="openDetails(rdv, false)"
+    />
+  </div>
+
+  <h2>Historique</h2>
+  <div class="rdv-component">
+    <p v-if="!loading && past.length === 0" style="color:#6b7280;">Aucun rendez-vous passé.</p>
+    <RdvCardsComponent
+      v-for="rdv in past"
+      :key="rdv.id_rendezvous"
+      :profilePicture="rdv.profile_picture || 'https://randomuser.me/api/portraits/men/32.jpg'"
+      :nom="rdv.doctor_last_name"
+      :prenom="rdv.doctor_first_name"
+      :profession="rdv.profession"
+      :operation="rdv.operation"
+      :date="formatDateFr(rdv.starts_at)"
+      :heure="formatTime(rdv.starts_at)"
+      :adresse="rdv.address"
+      :isPast="true"
+      @details="openDetails(rdv, true)"
+    />
+  </div>
+
+  <div
+    v-if="isDetailsOpen && selectedRdv"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Détails du rendez-vous"
+    style="position:fixed;inset:0;background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center;padding:14px;z-index:70;"
+    @click.self="closeDetails"
+  >
+    <div
+      style="background:#ffffff;border-radius:16px;max-width:560px;width:100%;padding:20px;max-height:90vh;overflow-y:auto;box-shadow:0 10px 25px rgba(0,0,0,0.2);"
+    >
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px;">
+        <h3 style="margin:0;font-size:18px;">
+          Détails du rendez-vous
+        </h3>
+        <button
+          type="button"
+          style="border:none;background:#e5e7eb;border-radius:999px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;"
+          @click="closeDetails"
+        >
+          ✕
+        </button>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:12px;">
+        <img
+          :src="selectedRdv.profile_picture || 'https://randomuser.me/api/portraits/men/32.jpg'"
+          alt="Photo du médecin"
+          style="width:56px;height:56px;border-radius:50%;object-fit:cover;"
         />
+        <div>
+          <h4 style="margin:0 0 4px 0;font-size:16px;">
+            Dr. {{ selectedRdv.doctor_first_name }} {{ selectedRdv.doctor_last_name }}
+          </h4>
+          <p style="margin:0 0 4px 0;font-size:13px;color:#4b5563;">
+            {{ selectedRdv.profession }}
+          </p>
+          <p style="margin:0;font-size:13px;color:#111827;">
+            {{ selectedRdv.operation }}
+          </p>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:#374151;">
+        <p>
+          <strong>Date :</strong>
+          {{ formatDateFr(selectedRdv.starts_at) }} à {{ formatTime(selectedRdv.starts_at) }}
+        </p>
+        <p>
+          <strong>Adresse :</strong>
+          {{ selectedRdv.address }}
+        </p>
+        <p>
+          <strong>Statut :</strong>
+          {{ selectedIsPast ? 'Passé' : 'À venir' }}
+        </p>
+      </div>
     </div>
-    <h2>Historique</h2>
-    <div class="rdv-component">
-        <RdvCardsComponent
-            profilePicture="https://randomuser.me/api/portraits/men/32.jpg"
-            nom="Dupont"
-            prenom="Jean"
-            profession="Cardiologue"
-            operation="Consultation de suivi"
-            date="12 Octobre 2024"
-            heure="14:30"
-            adresse="123 Rue de la Santé, Paris"
-            :isPast="true"
-        />
-    </div>
+  </div>
 
 </template>
 

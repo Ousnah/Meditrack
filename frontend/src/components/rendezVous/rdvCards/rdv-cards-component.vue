@@ -2,43 +2,47 @@
 import './rdvCards.css';
 
 defineProps({
-    profilePicture: { type: String, default: '' },
-    nom: { type: String, default: '' },
-    prenom: { type: String, default: '' },
-    profession: { type: String, default: '' },
-    operation: { type: String, default: '' },
-    date: { type: String, default: '' },
-    heure: { type: String, default: '' },
-    adresse: { type: String, default: '' },
-    isPast: { type: Boolean, default: false }
+  profilePicture: { type: String, default: '' },
+  nom: { type: String, default: '' },
+  prenom: { type: String, default: '' },
+  profession: { type: String, default: '' },
+  operation: { type: String, default: '' },
+  date: { type: String, default: '' },
+  heure: { type: String, default: '' },
+  adresse: { type: String, default: '' },
+  isPast: { type: Boolean, default: false },
 });
+
+const emit = defineEmits(['details']);
 </script>
 
 <template>
-<div class="rdv-cards" v-if="!isPast">
+  <div class="rdv-cards" v-if="!isPast">
     <div class="card-header">
-            <img :src="profilePicture" alt="Profile Picture" class="profile-picture" />
-            <div class="user-info">
-                    <h2>Dr. {{ prenom }} {{ nom }}</h2>
-                    <p>{{ profession }}</p>
-                    <p>{{ operation }}</p>
-            </div>
+      <img :src="profilePicture" alt="Profile Picture" class="profile-picture" />
+      <div class="user-info">
+        <h2>Dr. {{ prenom }} {{ nom }}</h2>
+        <p>{{ profession }}</p>
+        <p>{{ operation }}</p>
+      </div>
     </div>
-    <p> {{ date }}</p>
-    <p> {{ heure }}</p>
-    <p> {{ adresse }}</p>
-    <button class="details-button">Voir les détails</button>
-</div>
+    <p>{{ date }}</p>
+    <p>{{ heure }}</p>
+    <p>{{ adresse }}</p>
+    <button class="details-button" type="button" @click="emit('details')">
+      Voir les détails
+    </button>
+  </div>
 
-<div class="rdv-cards-past" v-if="isPast">
-        <img :src="profilePicture" alt="Profile Picture" class="profile-picture" />
-        <div class="user-info-past">
-                <h2>Dr. {{ prenom }} {{ nom }}</h2>
-                <p>{{ profession }}</p>
-                <p>{{ operation }}</p>
-                <p> {{ date }} à {{ heure }}</p>
-        </div>
-</div>
+  <div class="rdv-cards-past" v-if="isPast">
+    <img :src="profilePicture" alt="Profile Picture" class="profile-picture" />
+    <div class="user-info-past">
+      <h2>Dr. {{ prenom }} {{ nom }}</h2>
+      <p>{{ profession }}</p>
+      <p>{{ operation }}</p>
+      <p>{{ date }} à {{ heure }}</p>
+    </div>
+  </div>
 </template>
 
 <style scoped>

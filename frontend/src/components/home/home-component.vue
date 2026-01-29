@@ -36,19 +36,25 @@
           </button>
         </header>
         <article class="appointment-doctor">
-          <h3>Dr. Sophie Martin</h3>
-          <p class="specialty">Chirurgien</p>
-          <p class="description">Contrôle post-opératoire J+10</p>
+          <h3 v-if="nextRdv">Dr. {{ nextRdv.prenom }} {{ nextRdv.nom }}</h3>
+          <h3 v-else>Aucun rendez-vous</h3>
+          <p class="specialty" v-if="nextRdv">{{ nextRdv.profession }}</p>
+          <p class="description" v-if="nextRdv">{{ nextRdv.operation }}</p>
+          <p class="description" v-else>Ajoute ton premier rendez-vous dans l’onglet “Rendez-vous”.</p>
         </article>
         <div class="appointment-divider" role="presentation"></div>
         <div class="appointment-details">
           <div class="detail-item">
             <span class="detail-label" id="appointment-date-label">Date</span>
-            <span class="detail-value" aria-labelledby="appointment-date-label">25 Jan</span>
+            <span class="detail-value" aria-labelledby="appointment-date-label">
+              {{ nextRdv ? nextRdv.dateShort : '—' }}
+            </span>
           </div>
           <div class="detail-item">
             <span class="detail-label" id="appointment-time-label">Heure</span>
-            <span class="detail-value" aria-labelledby="appointment-time-label">14:00</span>
+            <span class="detail-value" aria-labelledby="appointment-time-label">
+              {{ nextRdv ? nextRdv.heure : '—' }}
+            </span>
           </div>
         </div>
       </section>
@@ -104,27 +110,26 @@
         </header>
 
         <ul class="documents" role="list">
-          <li class="document" role="listitem">
+          <li v-if="recentDocs.length === 0" class="document" role="listitem">
             <div class="doc-icon" aria-hidden="true">📄</div>
             <div class="doc-info">
-              <div class="doc-title">Compte rendu opératoire</div>
-              <div class="doc-meta">15 Jan 2026 · Chirurgie</div>
+              <div class="doc-title">Aucun document récent</div>
+              <div class="doc-meta">Ajoute tes documents dans l’onglet “Documents”.</div>
             </div>
           </li>
 
-          <li class="document" role="listitem">
+          <li
+            v-for="doc in recentDocs"
+            :key="doc.id"
+            class="document"
+            role="listitem"
+          >
             <div class="doc-icon" aria-hidden="true">📄</div>
             <div class="doc-info">
-              <div class="doc-title">Ordonnance post-opératoire</div>
-              <div class="doc-meta">15 Jan 2026 · Ordonnances</div>
-            </div>
-          </li>
-
-          <li class="document" role="listitem">
-            <div class="doc-icon" aria-hidden="true">📄</div>
-            <div class="doc-info">
-              <div class="doc-title">Bilan pré-opératoire</div>
-              <div class="doc-meta">5 Jan 2026 · Examens</div>
+              <div class="doc-title">{{ doc.title }}</div>
+              <div class="doc-meta">
+                {{ doc.date }} · {{ doc.type }}
+              </div>
             </div>
           </li>
         </ul>
@@ -134,5 +139,74 @@
 </template>
 
 <script setup>
+import { onMounted, ref } from 'vue';
 import './home.css';
+import { supabase } from '../../lib/supabase';
+
+const nextRdv = ref(null);
+const recentDocs = ref([]);
+
+const loadNextRdv = async () => {
+  const nowIso = new Date().toISOString();
+  const { data, error } = await supabase
+    .from('rendezvous')
+    .select('*')
+    .gte('starts_at', nowIso)
+    .order('starts_at', { ascending: true })
+    .limit(1)
+    .maybeSingle();
+
+  if (error) {
+    console.error(error);
+    nextRdv.value = null;
+    return;
+  }
+
+  if (!data) {
+    nextRdv.value = null;
+    return;
+  }
+
+  const d = new Date(data.starts_at);
+  nextRdv.value = {
+    prenom: data.doctor_first_name,
+    nom: data.doctor_last_name,
+    profession: data.profession,
+    operation: data.operation,
+    dateShort: d.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' }),
+    heure: d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+  };
+};
+
+const loadRecentDocs = async () => {
+  const { data, error } = await supabase
+    .from('document')
+    .select('id_document,titre,type,publication_date')
+    .order('publication_date', { ascending: false })
+    .limit(3);
+
+  if (error) {
+    console.error(error);
+    recentDocs.value = [];
+    return;
+  }
+
+  recentDocs.value = (data || []).map((row) => ({
+    id: row.id_document,
+    title: row.titre,
+    type: row.type,
+    date: row.publication_date
+      ? new Date(row.publication_date).toLocaleDateString('fr-FR', {
+          day: '2-digit',
+          month: 'short',
+          year: 'numeric',
+        })
+      : '',
+  }));
+};
+
+onMounted(() => {
+  loadNextRdv();
+  loadRecentDocs();
+});
 </script>
