@@ -4,8 +4,8 @@
             type="checkbox" 
             :checked="done"
             @change="$emit('toggle')"
-            @keydown.space.prevent="$emit('toggle')"
-            @keydown.enter.prevent="$emit('toggle')"
+            @keydown.space.prevent.stop="$emit('toggle')"
+            @keydown.enter.prevent.stop="$emit('toggle')"
             class="step-checkbox"
         />
         <span class="step-label" :class="{ 'step-label--done': done }">
