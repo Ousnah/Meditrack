@@ -1,6 +1,7 @@
 <script setup>
   import { ref } from 'vue';
   import TabBar from './layout/tabbar/tabbar-component.vue';
+  import Header from './components/Chirurgie_Suivi/Header.vue';
   import Home from './components/home/home-component.vue';
   import Etapes from './components/etapes/etapes-component.vue';
   import ContainerSection from './components/container/ContainerSection.vue';
@@ -30,19 +31,17 @@
 
     <!-- Steps Tab -->
     <section v-if="activeTab === 'steps'">
-      <ContainerSection title="Étapes" subtitle="Vos étapes seront affichées ici" />
       <Etapes />
     </section>
 
     <!-- Appointments Tab -->
     <section v-if="activeTab === 'appointments'" class="tab-content">
-      <ContainerSection title="📅 Rendez-vous" subtitle="Vos rendez-vous seront affichés ici" />
+      
       <rdvComponent />
     </section>
 
     <!-- Documents Tab -->
     <section v-if="activeTab === 'documents'" class="tab-content">
-      <ContainerSection title="📄 Documents" subtitle="Vos documents seront affichés ici" />
       <docComponent />
     </section>
 

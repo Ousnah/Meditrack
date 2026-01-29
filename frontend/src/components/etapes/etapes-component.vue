@@ -1,5 +1,9 @@
 <template>
+    <Header />
     <div class="etapes-container">
+        <section class="etapes-header" aria-label="En-tête étapes">
+            <h2>Étapes</h2>
+        </section>
         <div class="etapes-cards">
             <Cards
                 icon="medical-consultation"
@@ -40,6 +44,7 @@
 <script setup>
 import { ref } from 'vue';
 import './etapes.css';
+import Header from '../Chirurgie_Suivi/Header.vue';
 import Cards from './cards/cards-component.vue';
 
 const card1Steps = ref([
