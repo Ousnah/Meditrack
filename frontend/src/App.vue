@@ -4,6 +4,7 @@
   import Home from './components/home/home-component.vue';
   import Etapes from './components/etapes/etapes-component.vue';
   import ContainerSection from './components/container/ContainerSection.vue';
+  import rdvComponent from './components/rendezVous/rdv-component.vue';
 
   const activeTab = ref('home');
 
@@ -35,6 +36,7 @@
     <!-- Appointments Tab -->
     <section v-if="activeTab === 'appointments'" class="tab-content">
       <ContainerSection title="📅 Rendez-vous" subtitle="Vos rendez-vous seront affichés ici" />
+      <rdvComponent />
     </section>
 
     <!-- Documents Tab -->
