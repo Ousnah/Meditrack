@@ -50,10 +50,13 @@
 </template>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&display=swap');
+
 #app {
   background: #f5f5f5;
   min-height: 100vh;
   padding-bottom: 56px;
+  font-family: 'Arimo', sans-serif;
 }
 
 .tab-content {
