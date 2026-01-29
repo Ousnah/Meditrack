@@ -1,21 +1,15 @@
 <template>
-    <div 
-        tabindex="0" 
-        class="step" 
-        :aria-label="`étape : ${label}, état : ${done ? 'fait' : 'pas fait'}`"
-        @keydown.space.prevent.stop="$emit('toggle')"
-        @keydown.enter.prevent.stop="$emit('toggle')"
-        @click.stop="$emit('toggle')"
-    >
-        <div class="step-circle" :class="{ 'step-circle--done': done }">
-            <svg v-if="done" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12"></polyline>
-            </svg>
-        </div>
-        <span class="step-label" :class="{ 'step-label--done': done }" aria-hidden="true">
+    <label class="step" @click.stop>
+        <input 
+            type="checkbox" 
+            :checked="done"
+            @change="$emit('toggle')"
+            class="step-checkbox"
+        />
+        <span class="step-label" :class="{ 'step-label--done': done }">
             {{ label }}
         </span>
-    </div>
+    </label>
 </template>
 
 <script setup>
@@ -29,8 +23,6 @@ defineProps({
         required: true
     }
 });
-
-
 </script>
 
 <style src="./steps.css" scoped></style>
