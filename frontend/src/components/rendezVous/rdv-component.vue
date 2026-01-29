@@ -1,6 +1,7 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue';
 import './rdv.css';
+import Header from '../Chirurgie_Suivi/Header.vue';
 import RdvCardsComponent from './rdvCards/rdv-cards-component.vue';
 import addRdvComponent from './addRdv/add-rdv-component.vue';
 import { supabase } from '../../lib/supabase';
@@ -76,6 +77,7 @@ const closeDetails = () => {
 </script>
 
 <template>
+    <Header />
   <addRdvComponent :upcomingCount="upcoming.length" @created="loadRdvs" />
 
   <p v-if="loading" style="color:#6b7280;font-size:12px;margin:8px 0;">Chargement…</p>
