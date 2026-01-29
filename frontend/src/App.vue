@@ -3,6 +3,7 @@
   import TabBar from './components/TabBar.vue';
   import Home from './components/home/Home.vue';
   import Etapes from './components/etapes/Etapes.vue';
+  import Doc from './components/doc/Doc.vue';
 
   const activeTab = ref('home');
 
@@ -43,11 +44,8 @@
     </section>
 
     <!-- Documents Tab -->
-    <section v-if="activeTab === 'documents'" class="tab-content">
-      <div class="container">
-        <h1>📄 Documents</h1>
-        <p>Vos documents seront affichés ici</p>
-      </div>
+    <section v-if="activeTab === 'documents'">
+      <Doc />
     </section>
 
     <!-- TabBar Navigation -->
