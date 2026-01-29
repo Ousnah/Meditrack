@@ -2,7 +2,6 @@
     <div class="etapes-container">
         <div class="etapes-cards">
             <Cards
-                state="done"
                 icon="medical-consultation"
                 title="Consultation pré-opératoire"
                 description="Consultation avec le chirurgien et bilan pré-opératoire"
@@ -11,7 +10,6 @@
                 @toggle-step="(index) => toggleStep(card1Steps, index)"
             />
             <Cards
-                state="current"
                 icon="clipboard"
                 title="Préparation à l'intervention"
                 description="Préparation physique et administrative avant la chirurgie"
@@ -20,7 +18,6 @@
                 @toggle-step="(index) => toggleStep(card2Steps, index)"
             />
             <Cards
-                state="next"
                 icon="surgery"
                 title="Intervention chirurgicale"
                 description="Jour de l'opération"
@@ -29,7 +26,6 @@
                 @toggle-step="(index) => toggleStep(card3Steps, index)"
             />
             <Cards
-                state="next"
                 icon="hospital-bed"
                 title="Post-opératoire immédiat"
                 description="Surveillance et récupération en hospitalisation"
@@ -44,7 +40,7 @@
 <script setup>
 import { ref } from 'vue';
 import './etapes.css';
-import Cards from './cards/Cards.vue';
+import Cards from './cards/cards-component.vue';
 
 const card1Steps = ref([
     { label: 'Consultation chirurgien', done: true },

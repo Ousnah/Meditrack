@@ -1,8 +1,9 @@
 <script setup>
   import { ref } from 'vue';
-  import TabBar from './components/TabBar.vue';
-  import Home from './components/home/Home.vue';
-  import Etapes from './components/etapes/Etapes.vue';
+  import TabBar from './layout/tabbar/tabbar-component.vue';
+  import Home from './components/home/home-component.vue';
+  import Etapes from './components/etapes/etapes-component.vue';
+  import ContainerSection from './components/container/ContainerSection.vue';
 
   const activeTab = ref('home');
 
@@ -27,27 +28,18 @@
 
     <!-- Steps Tab -->
     <section v-if="activeTab === 'steps'">
-      <div class="container">
-        <h1>Étapes</h1>
-        <p>Vos étapes seront affichées ici</p>
-      </div>
+      <ContainerSection title="Étapes" subtitle="Vos étapes seront affichées ici" />
       <Etapes />
     </section>
 
     <!-- Appointments Tab -->
     <section v-if="activeTab === 'appointments'" class="tab-content">
-      <div class="container">
-        <h1>📅 Rendez-vous</h1>
-        <p>Vos rendez-vous seront affichés ici</p>
-      </div>
+      <ContainerSection title="📅 Rendez-vous" subtitle="Vos rendez-vous seront affichés ici" />
     </section>
 
     <!-- Documents Tab -->
     <section v-if="activeTab === 'documents'" class="tab-content">
-      <div class="container">
-        <h1>📄 Documents</h1>
-        <p>Vos documents seront affichés ici</p>
-      </div>
+      <ContainerSection title="📄 Documents" subtitle="Vos documents seront affichés ici" />
     </section>
 
     <!-- TabBar Navigation -->
