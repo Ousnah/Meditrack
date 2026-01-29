@@ -1,9 +1,11 @@
 <script setup>
   import { ref } from 'vue';
-  import TabBar from './components/TabBar.vue';
+  import TabBar from './layout/tabbar/tabbar-component.vue';
   import Home from './components/home/home-component.vue';
   import Etapes from './components/etapes/etapes-component.vue';
-  import Doc from './components/doc/Doc.vue';
+  import ContainerSection from './components/container/ContainerSection.vue';
+  import rdvComponent from './components/rendezVous/rdv-component.vue';
+  import docComponent from './components/doc/doc-component.vue';
 
   const activeTab = ref('home');
 
@@ -28,24 +30,20 @@
 
     <!-- Steps Tab -->
     <section v-if="activeTab === 'steps'">
-      <div class="container">
-        <h1>Étapes</h1>
-        <p>Vos étapes seront affichées ici</p>
-      </div>
+      <ContainerSection title="Étapes" subtitle="Vos étapes seront affichées ici" />
       <Etapes />
     </section>
 
     <!-- Appointments Tab -->
     <section v-if="activeTab === 'appointments'" class="tab-content">
-      <div class="container">
-        <h1>📅 Rendez-vous</h1>
-        <p>Vos rendez-vous seront affichés ici</p>
-      </div>
+      <ContainerSection title="📅 Rendez-vous" subtitle="Vos rendez-vous seront affichés ici" />
+      <rdvComponent />
     </section>
 
     <!-- Documents Tab -->
-    <section v-if="activeTab === 'documents'">
-      <Doc />
+    <section v-if="activeTab === 'documents'" class="tab-content">
+      <ContainerSection title="📄 Documents" subtitle="Vos documents seront affichés ici" />
+      <docComponent />
     </section>
 
     <!-- TabBar Navigation -->
@@ -54,10 +52,13 @@
 </template>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&display=swap');
+
 #app {
   background: #f5f5f5;
   min-height: 100vh;
   padding-bottom: 56px;
+  font-family: 'Arimo', sans-serif;
 }
 
 .tab-content {
