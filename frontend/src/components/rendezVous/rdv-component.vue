@@ -1,9 +1,11 @@
 <script setup>
 import './rdv.css';
 import RdvCardsComponent from './rdvCards/rdv-cards-component.vue';
+import addRdvComponent from './addRdv/add-rdv-component.vue';
 </script>
 
 <template>
+    <addRdvComponent />
     <h2>A venir</h2>
     <div class="rdv-component">
         <RdvCardsComponent
