@@ -5,6 +5,7 @@
   import Etapes from './components/etapes/etapes-component.vue';
   import ContainerSection from './components/container/ContainerSection.vue';
   import rdvComponent from './components/rendezVous/rdv-component.vue';
+  import docComponent from './components/doc/doc-component.vue';
 
   const activeTab = ref('home');
 
@@ -42,6 +43,7 @@
     <!-- Documents Tab -->
     <section v-if="activeTab === 'documents'" class="tab-content">
       <ContainerSection title="📄 Documents" subtitle="Vos documents seront affichés ici" />
+      <docComponent />
     </section>
 
     <!-- TabBar Navigation -->
