@@ -1,19 +1,22 @@
 <template>
   <main class="doc" role="main" aria-label="Page Documents médicaux">
-    <!-- Header -->
     <header class="header">
       <h1>Chirurgie Suivi</h1>
       <p>Votre parcours chirurgical étape par étape</p>
     </header>
 
-    <!-- Content -->
     <div class="container">
-      <!-- Documents Header -->
       <section class="documents-header" aria-label="En-tête documents">
         <h2>Documents médicaux</h2>
         <div class="header-info">
-          <span class="doc-count">6 documents</span>
-          <button class="upload-btn" aria-label="Télécharger un nouveau document" title="Télécharger">
+          <span class="doc-count">{{ documents.length }} documents</span>
+          <button
+            class="upload-btn"
+            aria-label="Ajouter un nouveau document"
+            title="Ajouter"
+            :disabled="uploading"
+            @click="triggerFilePicker"
+          >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" />
             </svg>
@@ -21,7 +24,14 @@
         </div>
       </section>
 
-      <!-- Category Filters -->
+      <input
+        ref="fileInput"
+        type="file"
+        accept="application/pdf,image/*"
+        style="display: none"
+        @change="onFileSelected"
+      />
+
       <nav class="category-filters" role="tablist" aria-label="Filtrer les documents par catégorie">
         <button 
           v-for="category in categories"
@@ -35,8 +45,12 @@
         </button>
       </nav>
 
-      <!-- Documents List -->
       <section class="documents-list" aria-label="Liste des documents">
+        <p v-if="loading" style="color:#6b7280;font-size:12px;margin:6px 0;">Chargement…</p>
+        <p v-else-if="errorMessage" style="color:#b91c1c;font-size:12px;margin:6px 0;">
+          {{ errorMessage }}
+        </p>
+
         <article 
           v-for="doc in filteredDocuments" 
           :key="doc.id"
@@ -59,14 +73,19 @@
           </div>
 
           <div class="doc-actions">
-            <button class="action-btn view-btn" aria-label="Voir le document" title="Voir">
+            <button class="action-btn view-btn" aria-label="Voir le document" title="Voir" @click="openDoc(doc)">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
                 <circle cx="12" cy="12" r="3" />
               </svg>
               <span>Voir</span>
             </button>
-            <button class="action-btn download-btn" aria-label="Télécharger le document" title="Télécharger">
+            <button
+              class="action-btn download-btn"
+              aria-label="Télécharger le document"
+              title="Télécharger"
+              @click="downloadDoc(doc)"
+            >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
               </svg>
@@ -76,73 +95,292 @@
         </article>
       </section>
     </div>
+
+    <div
+      v-if="isUploadModalOpen"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Ajouter un document"
+      style="position:fixed;inset:0;background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center;padding:14px;z-index:50;"
+      @click.self="closeUploadModal"
+    >
+      <div style="background:#fff;border-radius:14px;max-width:560px;width:100%;padding:20px;max-height:90vh;overflow-y:auto;box-shadow:0 10px 25px rgba(0,0,0,0.2);">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;">
+          <div>
+            <h3 style="margin:0;font-size:16px;">Ajouter un document</h3>
+            <p style="margin:4px 0 0;color:#6b7280;font-size:12px;">
+              {{ selectedFile?.name }} • {{ selectedFileHumanSize }}
+            </p>
+          </div>
+          <button
+            class="action-btn"
+            style="flex:0 0 auto;background:#f3f4f6;color:#111827;"
+            type="button"
+            @click="closeUploadModal"
+            :disabled="uploading"
+          >
+            Fermer
+          </button>
+        </div>
+
+        <form style="margin-top:12px;display:flex;flex-direction:column;gap:10px;" @submit.prevent="submitUpload">
+          <label style="display:flex;flex-direction:column;gap:6px;font-size:12px;color:#374151;">
+            Titre
+            <input
+              v-model.trim="uploadForm.title"
+              required
+              type="text"
+              placeholder="Ex: Compte rendu opératoire"
+              style="border:1px solid #e5e7eb;border-radius:10px;padding:10px;font-size:14px;"
+              :disabled="uploading"
+            />
+          </label>
+
+          <label style="display:flex;flex-direction:column;gap:6px;font-size:12px;color:#374151;">
+            Catégorie
+            <select
+              v-model="uploadForm.type"
+              required
+              style="border:1px solid #e5e7eb;border-radius:10px;padding:10px;font-size:14px;background:#fff;"
+              :disabled="uploading"
+            >
+              <option value="" disabled>Choisir…</option>
+              <option value="Chirurgie">Chirurgie</option>
+              <option value="Ordonnances">Ordonnances</option>
+              <option value="Examens">Examens</option>
+              <option value="Administratif">Administratif</option>
+            </select>
+          </label>
+
+          <label style="display:flex;flex-direction:column;gap:6px;font-size:12px;color:#374151;">
+            Date de publication
+            <input
+              v-model="uploadForm.publicationDate"
+              type="date"
+              style="border:1px solid #e5e7eb;border-radius:10px;padding:10px;font-size:14px;"
+              :disabled="uploading"
+            />
+          </label>
+
+          <p v-if="uploadErrorMessage" style="margin:0;color:#b91c1c;font-size:12px;">
+            {{ uploadErrorMessage }}
+          </p>
+
+          <button
+            class="action-btn view-btn"
+            type="submit"
+            :disabled="uploading || !selectedFile"
+            style="width:100%;"
+          >
+            {{ uploading ? 'Envoi…' : 'Ajouter' }}
+          </button>
+        </form>
+      </div>
+    </div>
   </main>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import './Doc.css'
+import { ref, computed, onMounted } from 'vue';
+import './Doc.css';
+import { supabase } from '../../lib/supabase';
 
-const activeCategory = ref('all')
+const activeCategory = ref('all');
 
 const categories = [
   { id: 'all', label: 'Tous' },
   { id: 'chirurgie', label: 'Chirurgie' },
   { id: 'ordonnances', label: 'Ordonnances' },
   { id: 'examens', label: 'Examens' },
-]
+  { id: 'administratif', label: 'Administratif' },
+];
 
-const documents = [
-  {
-    id: 1,
-    title: 'Compte rendu opératoire',
-    category: 'Chirurgie',
-    date: '15 Jan 2026',
-    size: '245 KB',
-  },
-  {
-    id: 2,
-    title: 'Ordonnance post-opératoire',
-    category: 'Ordonnances',
-    date: '15 Jan 2026',
-    size: '156 KB',
-  },
-  {
-    id: 3,
-    title: 'Consentement éclairé',
-    category: 'Administratif',
-    date: '10 Jan 2026',
-    size: '89 KB',
-  },
-  {
-    id: 4,
-    title: 'Bilan pré-opératoire',
-    category: 'Examens',
-    date: '5 Jan 2026',
-    size: '512 KB',
-  },
-  {
-    id: 5,
-    title: 'Analyse de sang',
-    category: 'Examens',
-    date: '3 Jan 2026',
-    size: '234 KB',
-  },
-  {
-    id: 6,
-    title: 'Prescription antibiotique',
-    category: 'Ordonnances',
-    date: '20 Jan 2026',
-    size: '67 KB',
-  },
-]
+const documents = ref([]);
+const loading = ref(true);
+const errorMessage = ref(null);
+
+const fileInput = ref(null);
+const selectedFile = ref(null);
+const isUploadModalOpen = ref(false);
+const uploading = ref(false);
+const uploadErrorMessage = ref(null);
+const uploadForm = ref({
+  title: '',
+  type: '',
+  publicationDate: '',
+});
+
+const loadDocuments = async () => {
+  loading.value = true;
+  errorMessage.value = null;
+
+  const { data, error } = await supabase
+    .from('document')
+    .select('*')
+    .order('publication_date', { ascending: false });
+
+  if (error) {
+    console.error('Erreur lors du chargement des documents :', error);
+    errorMessage.value = 'Impossible de charger les documents.';
+    loading.value = false;
+    return;
+  }
+
+  documents.value = (data || []).map((row) => ({
+    id: row.id_document,
+    title: row.titre,
+    category: row.type,
+    date: row.publication_date
+      ? new Date(row.publication_date).toLocaleDateString('fr-FR', {
+          day: '2-digit',
+          month: 'short',
+          year: 'numeric',
+        })
+      : '',
+    size: row.size_kb ? `${row.size_kb} KB` : '',
+    downloadLink: row.download_link ?? null,
+  }));
+
+  loading.value = false;
+};
+
+onMounted(() => {
+  loadDocuments();
+});
 
 const filteredDocuments = computed(() => {
   if (activeCategory.value === 'all') {
-    return documents
+    return documents.value;
   }
-  return documents.filter(doc => 
-    doc.category.toLowerCase() === activeCategory.value
-  )
-})
+  return documents.value.filter(
+    (doc) => doc.category && doc.category.toLowerCase() === activeCategory.value
+  );
+});
+
+const selectedFileHumanSize = computed(() => {
+  if (!selectedFile.value) return '';
+  const size = selectedFile.value.size;
+  if (size < 1024) return `${size} B`;
+  if (size < 1024 * 1024) return `${Math.round(size / 1024)} KB`;
+  return `${(size / (1024 * 1024)).toFixed(1)} MB`;
+});
+
+const triggerFilePicker = () => {
+  uploadErrorMessage.value = null;
+  fileInput.value?.click();
+};
+
+const closeUploadModal = () => {
+  if (uploading.value) return;
+  isUploadModalOpen.value = false;
+  selectedFile.value = null;
+  uploadErrorMessage.value = null;
+  uploadForm.value = { title: '', type: '', publicationDate: '' };
+  if (fileInput.value) fileInput.value.value = '';
+};
+
+const onFileSelected = (e) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+
+  selectedFile.value = file;
+  uploadForm.value.title = file.name.replace(/\.[^/.]+$/, '');
+  uploadForm.value.type = '';
+  uploadForm.value.publicationDate = new Date().toISOString().slice(0, 10);
+  isUploadModalOpen.value = true;
+};
+
+const safeFilename = (name) =>
+  name
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/[^a-z0-9._-]/g, '');
+
+const submitUpload = async () => {
+  uploadErrorMessage.value = null;
+  if (!selectedFile.value) {
+    uploadErrorMessage.value = 'Veuillez sélectionner un fichier.';
+    return;
+  }
+  if (!uploadForm.value.title || !uploadForm.value.type) {
+    uploadErrorMessage.value = 'Veuillez renseigner le titre et la catégorie.';
+    return;
+  }
+
+  uploading.value = true;
+  try {
+    const bucket = 'documents';
+    const ext = selectedFile.value.name.includes('.')
+      ? selectedFile.value.name.split('.').pop()
+      : '';
+    const randomId = typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    const path = `uploads/${randomId}-${safeFilename(uploadForm.value.title)}${ext ? `.${ext}` : ''}`;
+
+    const { error: uploadErr } = await supabase.storage
+      .from(bucket)
+      .upload(path, selectedFile.value, {
+        contentType: selectedFile.value.type || 'application/octet-stream',
+        upsert: false,
+      });
+
+    if (uploadErr) {
+      console.error('Erreur upload:', uploadErr);
+      uploadErrorMessage.value =
+  'Erreur: ' +
+  (uploadErr.message ||
+    "Échec de l'envoi du fichier. Vérifie que le bucket \"documents\" existe et que les policies RLS sont configurées.");      uploading.value = false;
+      return;
+    }
+
+    const { data: publicUrlData } = supabase.storage.from(bucket).getPublicUrl(path);
+    const publicUrl = publicUrlData?.publicUrl ?? null;
+
+    const sizeKb = Math.max(1, Math.round(selectedFile.value.size / 1024));
+    const publicationDate = uploadForm.value.publicationDate || null;
+
+    const { error: insertErr } = await supabase.from('document').insert({
+      titre: uploadForm.value.title,
+      type: uploadForm.value.type,
+      publication_date: publicationDate,
+      download_link: publicUrl,
+      size_kb: sizeKb,
+    });
+
+    if (insertErr) {
+      console.error(insertErr);
+      uploadErrorMessage.value = "Fichier envoyé, mais impossible d'enregistrer en base.";
+      uploading.value = false;
+      return;
+    }
+
+    await loadDocuments();
+    closeUploadModal();
+  } finally {
+    uploading.value = false;
+  }
+};
+
+const openDoc = (doc) => {
+  if (!doc?.downloadLink) {
+    alert("Aucun lien de document n'est disponible.");
+    return;
+  }
+  window.open(doc.downloadLink, '_blank', 'noopener,noreferrer');
+};
+
+const downloadDoc = (doc) => {
+  if (!doc?.downloadLink) {
+    alert("Aucun lien de téléchargement n'est disponible.");
+    return;
+  }
+  const a = document.createElement('a');
+  a.href = doc.downloadLink;
+  a.target = '_blank';
+  a.rel = 'noopener noreferrer';
+  a.download = '';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+};
 </script>
