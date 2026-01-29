@@ -1,8 +1,8 @@
 <script setup>
   import { ref } from 'vue';
   import TabBar from './components/TabBar.vue';
-  import Home from './components/home/Home.vue';
-  import Etapes from './components/etapes/Etapes.vue';
+  import Home from './components/home/home-component.vue';
+  import Etapes from './components/etapes/etapes-component.vue';
   import Doc from './components/doc/Doc.vue';
 
   const activeTab = ref('home');
