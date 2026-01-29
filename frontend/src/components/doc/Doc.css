@@ -1,0 +1,460 @@
+.doc {
+  background: #f5f5f5;
+  min-height: 100vh;
+  padding-bottom: 70px;
+}
+
+.header {
+  background: linear-gradient(135deg, #4a9b8e 0%, #3d8078 100%);
+  color: white;
+  padding: 24px 16px;
+  border-radius: 0 0 16px 16px;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.header p {
+  margin: 0;
+  font-size: 13px;
+  opacity: 0.9;
+}
+
+.container {
+  padding: 12px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.documents-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.documents-header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a1a1a;
+  flex: 1;
+  min-width: 200px;
+}
+
+.header-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.doc-count {
+  font-size: 12px;
+  color: #6b7280;
+  white-space: nowrap;
+}
+
+.upload-btn {
+  background: #4a9b8e;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.upload-btn:hover {
+  background: #3d8078;
+  transform: scale(1.05);
+}
+
+.upload-btn:active {
+  transform: scale(0.95);
+}
+
+.upload-btn:focus-visible {
+  outline: 2px solid #3d8078;
+  outline-offset: 2px;
+}
+
+.upload-btn svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2;
+}
+
+.category-filters {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 14px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 2px;
+  scroll-behavior: smooth;
+}
+
+.category-filters::-webkit-scrollbar {
+  height: 3px;
+}
+
+.category-filters::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.category-filters::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 3px;
+}
+
+.filter-btn {
+  background: white;
+  border: 2px solid #e5e7eb;
+  color: #6b7280;
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.filter-btn:hover {
+  border-color: #4a9b8e;
+  color: #4a9b8e;
+  background: #f0fffe;
+}
+
+.filter-btn.active {
+  background: #4a9b8e;
+  color: white;
+  border-color: #4a9b8e;
+}
+
+.filter-btn:focus-visible {
+  outline: 2px solid #4a9b8e;
+  outline-offset: 1px;
+}
+
+.documents-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.document-card {
+  background: white;
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s;
+}
+
+.document-card:active {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+.doc-header {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.doc-icon {
+  font-size: 24px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e0f2f1;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.doc-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.doc-title {
+  margin: 0 0 4px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+  word-break: break-word;
+}
+
+.doc-category {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 6px;
+  border-radius: 4px;
+  margin-bottom: 6px;
+}
+
+.category-chirurgie {
+  background: #fecaca;
+  color: #b91c1c;
+}
+
+.category-ordonnances {
+  background: #bfdbfe;
+  color: #1e40af;
+}
+
+.category-examens {
+  background: #d1d5db;
+  color: #4b5563;
+}
+
+.category-administratif {
+  background: #d1d5db;
+  color: #4b5563;
+}
+
+.doc-meta {
+  font-size: 11px;
+  color: #9ca3af;
+  display: flex;
+  gap: 3px;
+}
+
+.doc-actions {
+  display: flex;
+  gap: 6px;
+  width: 100%;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex: 1;
+  min-height: 32px;
+}
+
+.view-btn {
+  color: #4a9b8e;
+  background: #e0f2f1;
+}
+
+.view-btn:hover {
+  background: #4a9b8e;
+  color: white;
+}
+
+.view-btn:active {
+  transform: scale(0.98);
+}
+
+.download-btn {
+  color: #6b7280;
+  background: #f3f4f6;
+}
+
+.download-btn:hover {
+  background: #e5e7eb;
+  color: #1a1a1a;
+}
+
+.download-btn:active {
+  transform: scale(0.98);
+}
+
+.action-btn svg {
+  width: 14px;
+  height: 14px;
+  stroke-width: 2;
+  flex-shrink: 0;
+}
+
+.action-btn:focus-visible {
+  outline: 2px solid #4a9b8e;
+  outline-offset: 1px;
+}
+
+/* Tablette */
+@media (min-width: 640px) {
+  .doc {
+    padding-bottom: 72px;
+  }
+
+  .header {
+    padding: 32px 20px;
+    border-radius: 0 0 20px 20px;
+  }
+
+  .header h1 {
+    font-size: 28px;
+    margin-bottom: 8px;
+  }
+
+  .header p {
+    font-size: 14px;
+  }
+
+  .container {
+    padding: 16px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .documents-header {
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .documents-header h2 {
+    font-size: 24px;
+  }
+
+  .doc-count {
+    font-size: 13px;
+  }
+
+  .upload-btn {
+    width: 44px;
+    height: 44px;
+  }
+
+  .upload-btn svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .category-filters {
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .filter-btn {
+    padding: 8px 14px;
+    font-size: 13px;
+  }
+
+  .documents-list {
+    gap: 12px;
+  }
+
+  .document-card {
+    flex-direction: row;
+    padding: 14px;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .document-card:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+  }
+
+  .doc-header {
+    flex: 1;
+  }
+
+  .doc-icon {
+    font-size: 28px;
+    width: 48px;
+    height: 48px;
+  }
+
+  .doc-title {
+    font-size: 15px;
+  }
+
+  .doc-category {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+
+  .doc-meta {
+    font-size: 12px;
+  }
+
+  .doc-actions {
+    flex-direction: column;
+    gap: 8px;
+    width: auto;
+    flex-shrink: 0;
+  }
+
+  .action-btn {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+
+  .action-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+  .container {
+    max-width: 1000px;
+    padding: 20px;
+  }
+
+  .documents-header {
+    gap: 20px;
+  }
+
+  .documents-header h2 {
+    font-size: 28px;
+  }
+
+  .document-card {
+    padding: 16px;
+    gap: 14px;
+  }
+
+  .doc-icon {
+    font-size: 32px;
+    width: 52px;
+    height: 52px;
+  }
+
+  .doc-title {
+    font-size: 16px;
+  }
+
+  .action-btn {
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+
+  .action-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+}
