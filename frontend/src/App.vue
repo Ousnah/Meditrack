@@ -26,22 +26,25 @@
   <div id="app" role="application" aria-label="Application Meditrack">
     <!-- Home Tab -->
     <section v-if="activeTab === 'home'" aria-label="Page d'accueil">
+      <a href="#" class="backup-link" @click.prevent="handleTabChange(navigationTabs[0].id)" aria-label="Retour à l'accueil">Retour à l'accueil</a>
       <Home />
     </section>
 
     <!-- Steps Tab -->
     <section v-if="activeTab === 'steps'" aria-label="Page des étapes">
+      <a href="#" class="backup-link" @click.prevent="handleTabChange(navigationTabs[0].id)" aria-label="Retour à l'accueil">Retour à l'accueil</a>
       <Etapes />
     </section>
 
     <!-- Appointments Tab -->
     <section v-if="activeTab === 'appointments'" class="tab-content" aria-label="Page des rendez-vous">
-      
+      <a href="#" class="backup-link" @click.prevent="handleTabChange(navigationTabs[0].id)" aria-label="Retour à l'accueil">Retour à l'accueil</a>
       <rdvComponent />
     </section>
 
     <!-- Documents Tab -->
     <section v-if="activeTab === 'documents'" class="tab-content" aria-label="Page des documents">
+      <a href="#" class="backup-link" @click.prevent="handleTabChange(navigationTabs[0].id)" aria-label="Retour à l'accueil">Retour à l'accueil</a>
       <docComponent />
     </section>
 
@@ -86,5 +89,27 @@
   #app {
     padding-bottom: 64px;
   }
+}
+
+.backup-link {
+  display: hidden;
+  margin-bottom: 12px;
+  color: transparent;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.backup-link:hover,
+.backup-link:focus,
+.backup-link:focus-visible {
+  opacity: 1;
+  color: #2563eb;
+  display: inline-block;
+}
+
+/* visible focus outline for keyboard users */
+.backup-link:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 3px;
 }
 </style>
